@@ -1,3 +1,5 @@
+Work is done in TextReader.hpp
+
 Project 4
 Individually
 John Morkovci
