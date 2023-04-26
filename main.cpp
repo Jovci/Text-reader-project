@@ -1,6 +1,6 @@
+#include <cmath>  // abs()
 #include <iostream>
 #include <string>
-#include <cmath>    // abs()
 
 #include "TextReader.hpp"
 using namespace std;
@@ -17,115 +17,126 @@ static const string RESET = "\033[0m";
 template <typename T, typename U>
 bool assertEquals(const string& nameOfTest, const T& expected, const U& actual);
 
-
 template <typename T, typename U>
-bool assertVectorEquals(const string& nameOfTest, const vector<T>& expected, const vector<U>& actual);
-
-
-
+bool assertVectorEquals(const string& nameOfTest, const vector<T>& expected,
+                        const vector<U>& actual);
 
 // Main
-int main(int argc, char const *argv[]) {
-    TextReader gen;
-    assertEquals("'.' is Punctuation :", true, gen.isEndPunctuation('.'));
-    assertEquals("'?' is Punctuation :", true, gen.isEndPunctuation('?'));
-    assertEquals("'!' is Punctuation :", true, gen.isEndPunctuation('!'));
-    assertEquals("'a' is Punctuation :", false, gen.isEndPunctuation('a'));
+int main(int argc, char const* argv[]) {
+  TextReader gen;
+  assertEquals("'.' is Punctuation :", true, gen.isEndPunctuation('.'));
+  assertEquals("'?' is Punctuation :", true, gen.isEndPunctuation('?'));
+  assertEquals("'!' is Punctuation :", true, gen.isEndPunctuation('!'));
+  assertEquals("'a' is Punctuation :", false, gen.isEndPunctuation('a'));
 
-    TextReader Frankenstein;
-    Frankenstein.readIn("Frankenstein or The Modern Prometheus by Mary Shelley.txt");
+  TextReader Frankenstein;
+  Frankenstein.readIn(
+      "Frankenstein or The Modern Prometheus by Mary Shelley.txt");
 
-    {
-        vector<string> expected = { "lovers,", "days", "lovers" };
-        assertVectorEquals("Values : Frankenstein 'youthful'", expected, Frankenstein.getValues("youthful"));
+  {
+    vector<string> expected = {"lovers,", "days", "lovers"};
+    assertVectorEquals("Values : Frankenstein 'youthful'", expected,
+                       Frankenstein.getValues("youthful"));
 
-        expected = { "out", "the", "the", "by", "in", "their", "on" };
-        assertVectorEquals("Values : Frankenstein 'marked'", expected, Frankenstein.getValues("marked"));
+    expected = {"out", "the", "the", "by", "in", "their", "on"};
+    assertVectorEquals("Values : Frankenstein 'marked'", expected,
+                       Frankenstein.getValues("marked"));
 
-        assertEquals("Value Count : Frankenstein '^' > 0: ", true, Frankenstein.getValues("^").size() > 10);
-        
-        assertEquals("Searching : Frankenstein 'rejoice' found", true, Frankenstein.search("rejoice"));
+    assertEquals("Value Count : Frankenstein '^' > 0: ", true,
+                 Frankenstein.getValues("^").size() > 10);
 
-        assertEquals("Followers Count : Frankenstein 'breeze'", 8, Frankenstein.howManyfollowers("breeze"));
-    
-        assertEquals("Followers Count : Frankenstein 'river'", 9, Frankenstein.howManyfollowers("river"));
-    }
+    assertEquals("Searching : Frankenstein 'rejoice' found", true,
+                 Frankenstein.search("rejoice"));
 
-    TextReader SleepyHollow;
-    SleepyHollow.readIn("The Legend of Sleep Hollow by Washington Irving.txt");
+    assertEquals("Followers Count : Frankenstein 'breeze'", 8,
+                 Frankenstein.howManyfollowers("breeze"));
 
-    {
-        vector<string> expected = { "hill,","crests", "dell," };
-        assertVectorEquals("Values : SleepyHollow 'woody'", expected, SleepyHollow.getValues("woody"));
+    assertEquals("Followers Count : Frankenstein 'river'", 9,
+                 Frankenstein.howManyfollowers("river"));
+  }
 
-        expected = { "which", "of", "of" };
-        assertVectorEquals("Values : SleepyHollow 'quarter'", expected, SleepyHollow.getValues("quarter"));
+  TextReader SleepyHollow;
+  SleepyHollow.readIn("The Legend of Sleep Hollow by Washington Irving.txt");
 
-        assertEquals("Value Count : SleepyHollow '^' < 0", false, SleepyHollow.getValues("^").size() < 10);
+  {
+    vector<string> expected = {"hill,", "crests", "dell,"};
+    assertVectorEquals("Values : SleepyHollow 'woody'", expected,
+                       SleepyHollow.getValues("woody"));
 
-        assertEquals("Searching : SleepyHollow 'complexity' found", false, SleepyHollow.search("complexity"));
+    expected = {"which", "of", "of"};
+    assertVectorEquals("Values : SleepyHollow 'quarter'", expected,
+                       SleepyHollow.getValues("quarter"));
 
-        assertEquals("Followers Count : SleepyHollow 'complexity'", 0, SleepyHollow.howManyfollowers("complexity"));
-        
-        assertEquals("Followers Count : SleepyHollow 'river'", 2, SleepyHollow.howManyfollowers("river"));
-        
+    assertEquals("Value Count : SleepyHollow '^' < 0", false,
+                 SleepyHollow.getValues("^").size() < 10);
 
-    }
-	
+    assertEquals("Searching : SleepyHollow 'complexity' found", false,
+                 SleepyHollow.search("complexity"));
 
-    cout << endl << testCount << " tests passed out of " << testTotal << " total tests" << endl
-		<< 100.0 * (float)testCount / (float)testTotal << "/100" << endl;
+    assertEquals("Followers Count : SleepyHollow 'complexity'", 0,
+                 SleepyHollow.howManyfollowers("complexity"));
 
-	cin.get();
-    return 0;
+    assertEquals("Followers Count : SleepyHollow 'river'", 2,
+                 SleepyHollow.howManyfollowers("river"));
+  }
+
+  cout << endl
+       << testCount << " tests passed out of " << testTotal << " total tests"
+       << endl
+       << 100.0 * (float)testCount / (float)testTotal << "/100" << endl;
+
+  cin.get();
+  return 0;
 }
 
 // Helper Functions
 
-
 template <typename T, typename U>
-bool assertVectorEquals(const string& nameOfTest, const vector<T>& expected, const vector<U>& actual) {
-    if (expected.size() == actual.size()) {
-        for (size_t i = 0; i < expected.size(); i++) {
-            if (expected[i] != actual[i]) {
-                // Red colored text
-                cout << RED << "FAILED "
-                     << RESET << nameOfTest << ": expected '" << expected[i] << "' but actually '" << actual[i] << "'" << endl;
-                return false;
-            }
-        }
-
-        // Green colored text
-        cout << GREEN << "PASSED "
-             << RESET << nameOfTest << ": expected and actual lists match: {";
-        for (int i = 0; i < expected.size(); i++) {
-            cout << " " << expected[i];
-        }
-        cout << " }" << endl;
-
-        testCount++;
-        return true;
+bool assertVectorEquals(const string& nameOfTest, const vector<T>& expected,
+                        const vector<U>& actual) {
+  if (expected.size() == actual.size()) {
+    for (size_t i = 0; i < expected.size(); i++) {
+      if (expected[i] != actual[i]) {
+        // Red colored text
+        cout << RED << "FAILED " << RESET << nameOfTest << ": expected '"
+             << expected[i] << "' but actually '" << actual[i] << "'" << endl;
+        return false;
+      }
     }
 
-    // Red colored text
-    cout << RED << "FAILED "
-         << RESET << nameOfTest << ": expected size '" << expected.size() << "' but actually size is '" << actual.size() << "'" << endl;
-    return false;
+    // Green colored text
+    cout << GREEN << "PASSED " << RESET << nameOfTest
+         << ": expected and actual lists match: {";
+    for (int i = 0; i < expected.size(); i++) {
+      cout << " " << expected[i];
+    }
+    cout << " }" << endl;
+
+    testCount++;
+    return true;
+  }
+
+  // Red colored text
+  cout << RED << "FAILED " << RESET << nameOfTest << ": expected size '"
+       << expected.size() << "' but actually size is '" << actual.size() << "'"
+       << endl;
+  return false;
 }
 
-
-
 template <typename T, typename U>
-bool assertEquals(const string& nameOfTest, const T& expected, const U& actual) {
-    if (expected == actual) {
-        // Green colored text
-        cout << RESET << GREEN << "PASSED "
-            << RESET << nameOfTest << GREEN << ": expected and actual '" << RESET << actual << GREEN << "'" << RESET << endl;
-        testCount++;
-        return true;
-    }
-    // Red colored text
-    cout << RESET << RED << "FAILED "
-        << RESET << nameOfTest << RED << ": expected '" << RESET << expected << RED << "' but actually '" << RESET << actual << RED << "'" << RESET << endl;
-    return false;
+bool assertEquals(const string& nameOfTest, const T& expected,
+                  const U& actual) {
+  if (expected == actual) {
+    // Green colored text
+    cout << RESET << GREEN << "PASSED " << RESET << nameOfTest << GREEN
+         << ": expected and actual '" << RESET << actual << GREEN << "'"
+         << RESET << endl;
+    testCount++;
+    return true;
+  }
+  // Red colored text
+  cout << RESET << RED << "FAILED " << RESET << nameOfTest << RED
+       << ": expected '" << RESET << expected << RED << "' but actually '"
+       << RESET << actual << RED << "'" << RESET << endl;
+  return false;
 }
